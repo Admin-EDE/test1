@@ -555,7 +555,7 @@ class Assessmentneedapipcontent(models.Model):
     assessmentneedapipcontentid = models.AutoField(db_column='AssessmentNeedApipContentId', primary_key=True)  # Field name made lowercase.
     assessmentpersonalneedsprofilecontentid = models.ForeignKey('Assessmentpersonalneedsprofilecontent', models.DO_NOTHING, db_column='AssessmentPersonalNeedsProfileContentId')  # Field name made lowercase.
     itemtranslationdisplaylanguagetypeid = models.ForeignKey('Reflanguage', models.DO_NOTHING, db_column='ItemTranslationDisplayLanguageTypeId', blank=True, null=True)  # Field name made lowercase.
-    keywordtranslationlanguagetypeid = models.ForeignKey('Reflanguage', models.DO_NOTHING, db_column='KeywordTranslationLanguageTypeId', blank=True, null=True)  # Field name made lowercase.
+    keywordtranslationlanguagetypeid = models.ForeignKey('Reflanguage', models.DO_NOTHING, db_column='KeywordTranslationLanguageTypeId', blank=True, null=True, related_name="RN_Assessmentneedapipcontent_keywordtranslationlanguagetypeid")  # Field name made lowercase.
     refassessmentneedsigningtypeid = models.ForeignKey('Refassessmentneedsigningtype', models.DO_NOTHING, db_column='RefAssessmentNeedSigningTypeId', blank=True, null=True)  # Field name made lowercase.
     refassessmentneedalternativerepresentationtypeid = models.ForeignKey('Refassessmentneedalternativerepresentationtype', models.DO_NOTHING, db_column='RefAssessmentNeedAlternativeRepresentationTypeId', blank=True, null=True)  # Field name made lowercase.
     refassessmentneedspokensourcepreferencetypeid = models.ForeignKey('Refassessmentneedspokensourcepreferencetype', models.DO_NOTHING, db_column='RefAssessmentNeedSpokenSourcePreferenceTypeId', blank=True, null=True)  # Field name made lowercase.
@@ -809,15 +809,15 @@ class Assessmentregistration(models.Model):
     refassessmentpurposeid = models.ForeignKey('Refassessmentpurpose', models.DO_NOTHING, db_column='RefAssessmentPurposeId', blank=True, null=True)  # Field name made lowercase.
     refassessmentreasonnottestedid = models.ForeignKey('Refassessmentreasonnottested', models.DO_NOTHING, db_column='RefAssessmentReasonNotTestedId', blank=True, null=True)  # Field name made lowercase.
     refassessmentreasonnotcompletingid = models.ForeignKey('Refassessmentreasonnotcompleting', models.DO_NOTHING, db_column='RefAssessmentReasonNotCompletingId', blank=True, null=True)  # Field name made lowercase.
-    refgradeleveltobeassessedid = models.ForeignKey('Refgradelevel', models.DO_NOTHING, db_column='RefGradeLevelToBeAssessedId', blank=True, null=True)  # Field name made lowercase.
-    refgradelevelwhenassessedid = models.ForeignKey('Refgradelevel', models.DO_NOTHING, db_column='RefGradeLevelWhenAssessedId', blank=True, null=True)  # Field name made lowercase.
+    refgradeleveltobeassessedid = models.ForeignKey('Refgradelevel', models.DO_NOTHING, db_column='RefGradeLevelToBeAssessedId', blank=True, null=True, related_name="RN_Assessmentregistration_refgradeleveltobeassessedid")  # Field name made lowercase.
+    refgradelevelwhenassessedid = models.ForeignKey('Refgradelevel', models.DO_NOTHING, db_column='RefGradeLevelWhenAssessedId', blank=True, null=True, related_name="RN_Assessmentregistration_refgradelevelwhenassessedid")  # Field name made lowercase.
     personid = models.ForeignKey('Person', models.DO_NOTHING, db_column='PersonId')  # Field name made lowercase.
     assessmentformid = models.ForeignKey(Assessmentform, models.DO_NOTHING, db_column='AssessmentFormId', blank=True, null=True)  # Field name made lowercase.
     organizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='OrganizationId', blank=True, null=True)  # Field name made lowercase.
-    schoolorganizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='SchoolOrganizationId', blank=True, null=True)  # Field name made lowercase.
-    leaorganizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='LeaOrganizationId', blank=True, null=True)  # Field name made lowercase.
+    schoolorganizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='SchoolOrganizationId', blank=True, null=True, related_name="RN_Assessmentregistration_schoolorganizationid")  # Field name made lowercase.
+    leaorganizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='LeaOrganizationId', blank=True, null=True, related_name="RN_Assessmentregistration_leaorganizationid")  # Field name made lowercase.
     assessmentadministrationid = models.ForeignKey(Assessmentadministration, models.DO_NOTHING, db_column='AssessmentAdministrationId', blank=True, null=True)  # Field name made lowercase.
-    assignedbypersonid = models.ForeignKey('Person', models.DO_NOTHING, db_column='AssignedByPersonId', blank=True, null=True)  # Field name made lowercase.
+    assignedbypersonid = models.ForeignKey('Person', models.DO_NOTHING, db_column='AssignedByPersonId', blank=True, null=True, related_name="RN_Assessmentregistration_assignedbypersonid")  # Field name made lowercase.
     assessmentregistrationcompletionstatusdatetime = models.DateTimeField(db_column='AssessmentRegistrationCompletionStatusDateTime', blank=True, null=True)  # Field name made lowercase.
     refassessmentregistrationcompletionstatusid = models.ForeignKey('Refassessmentregistrationcompletionstatus', models.DO_NOTHING, db_column='RefAssessmentRegistrationCompletionStatusId', blank=True, null=True)  # Field name made lowercase.
     leafullacademicyear = models.TextField(db_column='LEAFullAcademicYear', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
@@ -913,8 +913,8 @@ class Assessmentsession(models.Model):
     specialeventdescription = models.TextField(db_column='SpecialEventDescription', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     location = models.TextField(db_column='Location', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     organizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='OrganizationId', blank=True, null=True)  # Field name made lowercase.
-    lea_organizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='Lea_OrganizationId', blank=True, null=True)  # Field name made lowercase.
-    school_organizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='School_OrganizationId', blank=True, null=True)  # Field name made lowercase.
+    lea_organizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='Lea_OrganizationId', blank=True, null=True, related_name="lea_organizationid")  # Field name made lowercase.
+    school_organizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='School_OrganizationId', blank=True, null=True, related_name="school_organizationid")  # Field name made lowercase.
     recordstartdatetime = models.DateTimeField(db_column='RecordStartDateTime', blank=True, null=True)  # Field name made lowercase.
     recordenddatetime = models.DateTimeField(db_column='RecordEndDateTime', blank=True, null=True)  # Field name made lowercase.
 
@@ -1718,8 +1718,8 @@ class Elchildoutcomesummary(models.Model):
     cosprogressbindicator = models.TextField(db_column='COSProgressBIndicator', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     cosprogresscindicator = models.TextField(db_column='COSProgressCIndicator', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     cosratingaid = models.ForeignKey('Refchildoutcomessummaryrating', models.DO_NOTHING, db_column='COSRatingAId', blank=True, null=True)  # Field name made lowercase.
-    cosratingbid = models.ForeignKey('Refchildoutcomessummaryrating', models.DO_NOTHING, db_column='COSRatingBId', blank=True, null=True)  # Field name made lowercase.
-    cosratingcid = models.ForeignKey('Refchildoutcomessummaryrating', models.DO_NOTHING, db_column='COSRatingCId', blank=True, null=True)  # Field name made lowercase.
+    cosratingbid = models.ForeignKey('Refchildoutcomessummaryrating', models.DO_NOTHING, db_column='COSRatingBId', blank=True, null=True, related_name="cosratingbid")  # Field name made lowercase.
+    cosratingcid = models.ForeignKey('Refchildoutcomessummaryrating', models.DO_NOTHING, db_column='COSRatingCId', blank=True, null=True, related_name="cosratingcid")  # Field name made lowercase.
     recordstartdatetime = models.DateTimeField(db_column='RecordStartDateTime', blank=True, null=True)  # Field name made lowercase.
     recordenddatetime = models.DateTimeField(db_column='RecordEndDateTime', blank=True, null=True)  # Field name made lowercase.
 
@@ -1746,7 +1746,7 @@ class Elchildservice(models.Model):
     eceapeligibility = models.TextField(db_column='ECEAPEligibility', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     eligibilityprioritypoints = models.TextField(db_column='EligibilityPriorityPoints', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     servicedate = models.DateTimeField(db_column='ServiceDate', blank=True, null=True)  # Field name made lowercase.
-    refearlychildhoodservicesofferedid = models.ForeignKey('Refearlychildhoodservices', models.DO_NOTHING, db_column='RefEarlyChildhoodServicesOfferedId', blank=True, null=True)  # Field name made lowercase.
+    refearlychildhoodservicesofferedid = models.ForeignKey('Refearlychildhoodservices', models.DO_NOTHING, db_column='RefEarlyChildhoodServicesOfferedId', blank=True, null=True, related_name="refearlychildhoodservicesofferedid")  # Field name made lowercase.
     refearlychildhoodservicesreceivedid = models.ForeignKey('Refearlychildhoodservices', models.DO_NOTHING, db_column='RefEarlyChildhoodServicesReceivedId', blank=True, null=True)  # Field name made lowercase.
     refelservicetypeid = models.ForeignKey('Refelservicetype', models.DO_NOTHING, db_column='RefELServiceTypeId', blank=True, null=True)  # Field name made lowercase.
     recordstartdatetime = models.DateTimeField(db_column='RecordStartDateTime', blank=True, null=True)  # Field name made lowercase.
@@ -2377,7 +2377,7 @@ class Facilitymortgagefee(models.Model):
 
 class Facilityrelationship(models.Model):
     facilityrelationshipid = models.AutoField(db_column='FacilityRelationshipId', primary_key=True)  # Field name made lowercase.
-    parent_facilityid = models.ForeignKey(Facility, models.DO_NOTHING, db_column='Parent_FacilityId')  # Field name made lowercase.
+    parent_facilityid = models.ForeignKey(Facility, models.DO_NOTHING, db_column='Parent_FacilityId', related_name="parent_facilityid")  # Field name made lowercase.
     facilityid = models.ForeignKey(Facility, models.DO_NOTHING, db_column='FacilityId')  # Field name made lowercase.
     recordstartdatetime = models.DateTimeField(db_column='RecordStartDateTime', blank=True, null=True)  # Field name made lowercase.
     recordenddatetime = models.DateTimeField(db_column='RecordEndDateTime', blank=True, null=True)  # Field name made lowercase.
@@ -3086,7 +3086,7 @@ class K12Organizationstudentresponsibility(models.Model):
 
 class K12Programorservice(models.Model):
     organizationid = models.OneToOneField('Organization', models.DO_NOTHING, db_column='OrganizationId', primary_key=True)  # Field name made lowercase.
-    refprekindergartendailylengthid = models.ForeignKey('Refprogramdaylength', models.DO_NOTHING, db_column='RefPrekindergartenDailyLengthId', blank=True, null=True)  # Field name made lowercase.
+    refprekindergartendailylengthid = models.ForeignKey('Refprogramdaylength', models.DO_NOTHING, db_column='RefPrekindergartenDailyLengthId', blank=True, null=True, related_name="refprekindergartendailylengthid")  # Field name made lowercase.
     refkindergartendailylengthid = models.ForeignKey('Refprogramdaylength', models.DO_NOTHING, db_column='RefKindergartenDailyLengthId', blank=True, null=True)  # Field name made lowercase.
     refprogramgiftedeligibilityid = models.ForeignKey('Refprogramgiftedeligibility', models.DO_NOTHING, db_column='RefProgramGiftedEligibilityId', blank=True, null=True)  # Field name made lowercase.
     refmepsessiontypeid = models.ForeignKey('Refmepsessiontype', models.DO_NOTHING, db_column='RefMepSessionTypeId', blank=True, null=True)  # Field name made lowercase.
@@ -3444,7 +3444,7 @@ class K12Studentenrollment(models.Model):
     refpublicschoolresidence = models.ForeignKey('Refpublicschoolresidence', models.DO_NOTHING, db_column='RefPublicSchoolResidence', blank=True, null=True)  # Field name made lowercase.
     refenrollmentstatusid = models.ForeignKey('Refenrollmentstatus', models.DO_NOTHING, db_column='RefEnrollmentStatusId', blank=True, null=True)  # Field name made lowercase.
     refentrytype = models.ForeignKey('Refentrytype', models.DO_NOTHING, db_column='RefEntryType', blank=True, null=True)  # Field name made lowercase.
-    refexitgradelevel = models.ForeignKey('Refgradelevel', models.DO_NOTHING, db_column='RefExitGradeLevel', blank=True, null=True)  # Field name made lowercase.
+    refexitgradelevel = models.ForeignKey('Refgradelevel', models.DO_NOTHING, db_column='RefExitGradeLevel', blank=True, null=True, related_name="refexitgradelevel")  # Field name made lowercase.
     refexitorwithdrawalstatusid = models.ForeignKey('Refexitorwithdrawalstatus', models.DO_NOTHING, db_column='RefExitOrWithdrawalStatusId', blank=True, null=True)  # Field name made lowercase.
     refexitorwithdrawaltypeid = models.ForeignKey('Refexitorwithdrawaltype', models.DO_NOTHING, db_column='RefExitOrWithdrawalTypeId', blank=True, null=True)  # Field name made lowercase.
     displacedstudentstatus = models.TextField(db_column='DisplacedStudentStatus', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
@@ -3560,14 +3560,14 @@ class Learneractivity(models.Model):
     weight = models.TextField(db_column='Weight', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     possiblepoints = models.TextField(db_column='PossiblePoints', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     reflanguageid = models.IntegerField(db_column='RefLanguageId', blank=True, null=True)  # Field name made lowercase.
-    assignedbypersonid = models.ForeignKey('Person', models.DO_NOTHING, db_column='AssignedByPersonId', blank=True, null=True)  # Field name made lowercase.
-    schoolorganizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='SchoolOrganizationId', blank=True, null=True)  # Field name made lowercase.
+    assignedbypersonid = models.ForeignKey('Person', models.DO_NOTHING, db_column='AssignedByPersonId', blank=True, null=True, related_name="assignedbypersonid")  # Field name made lowercase.
+    schoolorganizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='SchoolOrganizationId', blank=True, null=True, related_name="schoolorganizationid")  # Field name made lowercase.
     leaorganizationid = models.ForeignKey('Organization', models.DO_NOTHING, db_column='LeaOrganizationId', blank=True, null=True)  # Field name made lowercase.
     recordstartdatetime = models.DateTimeField(db_column='RecordStartDateTime', blank=True, null=True)  # Field name made lowercase.
     recordenddatetime = models.DateTimeField(db_column='RecordEndDateTime', blank=True, null=True)  # Field name made lowercase.
     digitalrandomkey = models.IntegerField(db_column='digitalRandomKey', blank=True, null=True)  # Field name made lowercase.
     datedigitalrandomkey = models.TextField(db_column='DateDigitalRandomKey', blank=True, null=True)  # Field name made lowercase.
-    personiddigitalrandomkey = models.ForeignKey('Person', models.DO_NOTHING, db_column='personIDDigitalRandomKey', blank=True, null=True)  # Field name made lowercase.
+    personiddigitalrandomkey = models.ForeignKey('Person', models.DO_NOTHING, db_column='personIDDigitalRandomKey', blank=True, null=True, related_name="personiddigitalrandomkey")  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -3887,15 +3887,15 @@ class Organizationfederalaccountability(models.Model):
     aypappealchangeddesignation = models.TextField(db_column='AypAppealChangedDesignation', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     aypappealprocessdate = models.DateTimeField(db_column='AypAppealProcessDate', blank=True, null=True)  # Field name made lowercase.
     aypappealprocessdesignation = models.TextField(db_column='AypAppealProcessDesignation', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
-    amaoaypprogressattainmentlepstudents = models.ForeignKey('Refamaoattainmentstatus', models.DO_NOTHING, db_column='AmaoAypProgressAttainmentLepStudents', blank=True, null=True)  # Field name made lowercase.
-    amaoproficiencyattainmentlepstudents = models.ForeignKey('Refamaoattainmentstatus', models.DO_NOTHING, db_column='AmaoProficiencyAttainmentLepStudents', blank=True, null=True)  # Field name made lowercase.
+    amaoaypprogressattainmentlepstudents = models.ForeignKey('Refamaoattainmentstatus', models.DO_NOTHING, db_column='AmaoAypProgressAttainmentLepStudents', blank=True, null=True, related_name="amaoaypprogressattainmentlepstudents")  # Field name made lowercase.
+    amaoproficiencyattainmentlepstudents = models.ForeignKey('Refamaoattainmentstatus', models.DO_NOTHING, db_column='AmaoProficiencyAttainmentLepStudents', blank=True, null=True, related_name="amaoproficiencyattainmentlepstudents")  # Field name made lowercase.
     amaoprogressattainmentlepstudents = models.ForeignKey('Refamaoattainmentstatus', models.DO_NOTHING, db_column='AmaoProgressAttainmentLepStudents', blank=True, null=True)  # Field name made lowercase.
     refgunfreeschoolsactstatusreportingid = models.ForeignKey('Refgunfreeschoolsactreportingstatus', models.DO_NOTHING, db_column='RefGunFreeSchoolsActStatusReportingId', blank=True, null=True)  # Field name made lowercase.
     refhighschoolgraduationrateindicator = models.ForeignKey('Refhighschoolgraduationrateindicator', models.DO_NOTHING, db_column='RefHighSchoolGraduationRateIndicator', blank=True, null=True)  # Field name made lowercase.
-    refparticipationstatusmathid = models.ForeignKey('Refparticipationstatusayp', models.DO_NOTHING, db_column='RefParticipationStatusMathId', blank=True, null=True)  # Field name made lowercase.
-    refparticipationstatusrlaid = models.ForeignKey('Refparticipationstatusayp', models.DO_NOTHING, db_column='RefParticipationStatusRlaId', blank=True, null=True)  # Field name made lowercase.
-    refproficiencytargetstatusmathid = models.ForeignKey('Refproficiencytargetayp', models.DO_NOTHING, db_column='RefProficiencyTargetStatusMathId', blank=True, null=True)  # Field name made lowercase.
-    refproficiencytargetstatusrlaid = models.ForeignKey('Refproficiencytargetayp', models.DO_NOTHING, db_column='RefProficiencyTargetStatusRLAId', blank=True, null=True)  # Field name made lowercase.
+    refparticipationstatusmathid = models.ForeignKey('Refparticipationstatusayp', models.DO_NOTHING, db_column='RefParticipationStatusMathId', blank=True, null=True, related_name="refparticipationstatusmathid")  # Field name made lowercase.
+    refparticipationstatusrlaid = models.ForeignKey('Refparticipationstatusayp', models.DO_NOTHING, db_column='RefParticipationStatusRlaId', blank=True, null=True, related_name="refparticipationstatusrlaid")  # Field name made lowercase.
+    refproficiencytargetstatusmathid = models.ForeignKey('Refproficiencytargetayp', models.DO_NOTHING, db_column='RefProficiencyTargetStatusMathId', blank=True, null=True, related_name="refproficiencytargetstatusmathid")  # Field name made lowercase.
+    refproficiencytargetstatusrlaid = models.ForeignKey('Refproficiencytargetayp', models.DO_NOTHING, db_column='RefProficiencyTargetStatusRLAId', blank=True, null=True, related_name="refproficiencytargetstatusrlaid")  # Field name made lowercase.
     persistentlydangerousstatus = models.TextField(db_column='PersistentlyDangerousStatus', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     refreconstitutedstatusid = models.ForeignKey('Refreconstitutedstatus', models.DO_NOTHING, db_column='RefReconstitutedStatusId', blank=True, null=True)  # Field name made lowercase.
     refelementarymiddleadditionalid = models.ForeignKey('Refelementarymiddleadditional', models.DO_NOTHING, db_column='RefElementaryMiddleAdditionalId', blank=True, null=True)  # Field name made lowercase.
@@ -4036,7 +4036,7 @@ class Organizationprogramtype(models.Model):
 
 class Organizationrelationship(models.Model):
     organizationrelationshipid = models.AutoField(db_column='OrganizationRelationshipId', primary_key=True)  # Field name made lowercase.
-    parent_organizationid = models.ForeignKey(Organization, models.DO_NOTHING, db_column='Parent_OrganizationId')  # Field name made lowercase.
+    parent_organizationid = models.ForeignKey(Organization, models.DO_NOTHING, db_column='Parent_OrganizationId', related_name="parent_organizationid")  # Field name made lowercase.
     organizationid = models.ForeignKey(Organization, models.DO_NOTHING, db_column='OrganizationId', blank=True, null=True)  # Field name made lowercase.
     reforganizationrelationshipid = models.ForeignKey('Reforganizationrelationship', models.DO_NOTHING, db_column='RefOrganizationRelationshipId')  # Field name made lowercase.
     recordstartdatetime = models.DateTimeField(db_column='RecordStartDateTime', blank=True, null=True)  # Field name made lowercase.
@@ -4501,7 +4501,7 @@ class Personreferral(models.Model):
 class Personrelationship(models.Model):
     personrelationshipid = models.AutoField(db_column='PersonRelationshipId', primary_key=True)  # Field name made lowercase.
     personid = models.ForeignKey(Person, models.DO_NOTHING, db_column='PersonId')  # Field name made lowercase.
-    relatedpersonid = models.ForeignKey(Person, models.DO_NOTHING, db_column='RelatedPersonId')  # Field name made lowercase.
+    relatedpersonid = models.ForeignKey(Person, models.DO_NOTHING, db_column='RelatedPersonId', related_name="relatedpersonid")  # Field name made lowercase.
     refpersonrelationshipid = models.ForeignKey('Refpersonrelationship', models.DO_NOTHING, db_column='RefPersonRelationshipId', blank=True, null=True)  # Field name made lowercase.
     custodialrelationshipindicator = models.TextField(db_column='CustodialRelationshipIndicator', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     emergencycontactind = models.TextField(db_column='EmergencyContactInd', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
@@ -5044,7 +5044,7 @@ class Psstudentdemographic(models.Model):
     refcampusresidencytypeid = models.ForeignKey('Refcampusresidencytype', models.DO_NOTHING, db_column='RefCampusResidencyTypeId', blank=True, null=True)  # Field name made lowercase.
     refpsleptypeid = models.ForeignKey('Refpsleptype', models.DO_NOTHING, db_column='RefPsLepTypeId', blank=True, null=True)  # Field name made lowercase.
     refpaternaleducationlevelid = models.ForeignKey('Refeducationlevel', models.DO_NOTHING, db_column='RefPaternalEducationLevelId', blank=True, null=True)  # Field name made lowercase.
-    refmaternaleducationlevelid = models.ForeignKey('Refeducationlevel', models.DO_NOTHING, db_column='RefMaternalEducationLevelId', blank=True, null=True)  # Field name made lowercase.
+    refmaternaleducationlevelid = models.ForeignKey('Refeducationlevel', models.DO_NOTHING, db_column='RefMaternalEducationLevelId', blank=True, null=True, related_name="refmaternaleducationlevelid")  # Field name made lowercase.
     refcohortexclusionid = models.ForeignKey('Refcohortexclusion', models.DO_NOTHING, db_column='RefCohortExclusionId', blank=True, null=True)  # Field name made lowercase.
     numberofdependents = models.IntegerField(db_column='NumberOfDependents', blank=True, null=True)  # Field name made lowercase.
     recordstartdatetime = models.DateTimeField(db_column='RecordStartDateTime', blank=True, null=True)  # Field name made lowercase.
@@ -12813,11 +12813,11 @@ class Roleattendanceevent(models.Model):
     virtualindicator = models.TextField(db_column='VirtualIndicator', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     recordstartdatetime = models.DateTimeField(db_column='RecordStartDateTime', blank=True, null=True)  # Field name made lowercase.
     recordenddatetime = models.DateTimeField(db_column='RecordEndDateTime', blank=True, null=True)  # Field name made lowercase.
-    opridratificador = models.ForeignKey(Organizationpersonrole, models.DO_NOTHING, db_column='oprIdRatificador', blank=True, null=True)  # Field name made lowercase.
+    opridratificador = models.ForeignKey(Organizationpersonrole, models.DO_NOTHING, db_column='oprIdRatificador', blank=True, null=True, related_name="opridratificador")  # Field name made lowercase.
     firmaratificador = models.TextField(db_column='firmaRatificador', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     fecharatificador = models.DateTimeField(db_column='fechaRatificador', blank=True, null=True)  # Field name made lowercase.
     digitalrandomkeydate = models.DateTimeField(db_column='digitalRandomKeyDate', blank=True, null=True)  # Field name made lowercase.
-    digitalrandomkeyopr = models.ForeignKey(Organizationpersonrole, models.DO_NOTHING, db_column='digitalRandomKeyOpr', blank=True, null=True)  # Field name made lowercase.
+    digitalrandomkeyopr = models.ForeignKey(Organizationpersonrole, models.DO_NOTHING, db_column='digitalRandomKeyOpr', blank=True, null=True, related_name="digitalrandomkeyopr")  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -13125,15 +13125,15 @@ class Cedselements(models.Model):
     globalid = models.CharField(db_column='GlobalID', max_length=20, db_collation='NOCASE,', blank=True, null=True)  # Field name made lowercase.
     elementname = models.CharField(db_column='ElementName', max_length=150)  # Field name made lowercase.
     altname = models.CharField(db_column='AltName', max_length=150, blank=True, null=True)  # Field name made lowercase.
-    definition = models.CharField(db_column='Definition')  # Field name made lowercase.
+    definition = models.TextField(db_column='Definition')  # Field name made lowercase.
     format = models.CharField(db_column='Format', max_length=150, blank=True, null=True)  # Field name made lowercase.
     hasoptionset = models.TextField(db_column='HasOptionSet')  # Field name made lowercase. This field type is a guess.
-    usagenotes = models.CharField(db_column='UsageNotes', blank=True, null=True)  # Field name made lowercase.
+    usagenotes = models.TextField(db_column='UsageNotes', blank=True, null=True)  # Field name made lowercase.
     url = models.CharField(db_column='URL', max_length=512, blank=True, null=True)  # Field name made lowercase.
     version = models.CharField(db_column='Version', max_length=20, blank=True, null=True)  # Field name made lowercase.
     termid = models.AutoField(db_column='TermID', primary_key=True)  # Field name made lowercase.
     changedinthisversionind = models.CharField(db_column='ChangedInThisVersionInd', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    changenotes = models.CharField(db_column='ChangeNotes', blank=True, null=True)  # Field name made lowercase.
+    changenotes = models.TextField(db_column='ChangeNotes', blank=True, null=True)  # Field name made lowercase.
     recordstartdatetime = models.DateTimeField(db_column='RecordStartDateTime', blank=True, null=True)  # Field name made lowercase.
     recordenddatetime = models.DateTimeField(db_column='RecordEndDateTime', blank=True, null=True)  # Field name made lowercase.
 
