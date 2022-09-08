@@ -1,18 +1,18 @@
 
 
 <input type="date"/>
-<table>
+<table class="table">
     <tr>
-        <th>Hora</th>
-        <th>Sector</th>
-        <th>Inasistencias</th>
-        <th>Asistencia total</th>
-        <th>Atrasos</th>
-        <th>Observaciones</th>
-        <th>Firmas</th>
+        <th scope="col">Hora</th>
+        <th scope="col">Sector</th>
+        <th scope="col">Inasistencias</th>
+        <th scope="col">Asistencia total</th>
+        <th scope="col">Atrasos</th>
+        <th scope="col">Observaciones</th>
+        <th scope="col">Firmas</th>
     </tr>
     <tr>
-        <td>1</td>
+        <td scope="row">1</td>
         <td></td>
         <td></td>
         <td></td>
@@ -21,5 +21,11 @@
         <td></td>
     </tr>
 </table>
-
-Matrícula H <input type="number"/> M <input type="number"/> T <input type="number"/> Asistencia T <input type="number"/>
+<div>
+Matrícula H <input type="number" class="form-control"/>
+    M <input type="number" class="form-control"/>
+    T <input type="number" class="form-control"/>
+    <div class="col-auto>"
+    Asistencia T <input type="number" class="form-control"/>
+    </div>
+</div>

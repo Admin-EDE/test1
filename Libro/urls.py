@@ -19,4 +19,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('upload_database/', views.upload_database, name='Libro_upload_database'),
 ]
