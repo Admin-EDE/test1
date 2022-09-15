@@ -1,13 +1,13 @@
 {% extends "Libro/base.html" %}
 {% block content %}
-<form method="post" action="/upload_database" class="form" enctype="multipart/form-data">
-
+<form method="post" action="/libro/upload_database/" class="form" enctype="multipart/form-data">
+{% csrf_token %}
     <div>
         <label class="form-label" for="database_input">
             Base de datos
         </label>
         <input type="file" name="file" id="database_input" autocomplete="off" required>
     </div>
-
+    <input type="submit">
 </form>
 {% endblock %}
