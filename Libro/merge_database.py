@@ -8,12 +8,33 @@ from django.conf import settings
 import shutil
 import json
 from django.db import connection
-
+import sqlparse
+import re
 from . import models
+
+
+def get_fks_from_sql(sql_create: str) -> list:
+    sql = sqlparse.format(sql_create, reindent=True, keyword_case='upper')
+    sql_lines = sql.split("\n")
+    fks = []
+    for line in sql_lines:
+        s2 = line.strip().replace(",", "")
+        if s2.find("FOREIGN KEY") == 0:
+            m = re.match('FOREIGN KEY\("[a-zA-Z]*"\)', s2)
+            if m is None:
+                continue
+            tbl_name = m.group().replace('FOREIGN KEY("', "").replace('")', "")
+            ref = s2[len(m.group()):].replace(' REFERENCES "', "").replace('")', "").replace(")", "").split('"("')
+            if ref[1].find(" ") > 0:
+                ref[1] = ref[1][:ref[1].find(" ")]
+            # print(tbl_name, ref)
+            fks.append((tbl_name, (ref[0], ref[1])))
+    return fks
 
 
 def get_pk(tables):
     pk_idx = None
+    pk_name = None
     for i in range(0, len(tables)):
         if tables[i][5] == 1:
             if pk_idx is not None:
@@ -23,40 +44,54 @@ def get_pk(tables):
     return pk_idx, pk_name
 
 
-def get_mappings_pk(conn: sqlite3.Connection):
+def table_to_process(conn: sqlite3.Connection) -> tuple:
     res = conn.execute("SELECT tbl_name, sql FROM sqlite_schema")
-    mapping_ids = {}
     i_table = 0
     for r in res:
         i_table += 1
-        print(f"{i_table}, {r[0]}")
+
         # omit some specific non model tables
         # and all the views (ended in "List")
-        if r[0] in ["sqlite_sequence", "_CEDStoNDSMapping", "tmp"] or r[0].find("List") > 0:
-            print("------")
+        if r[0] in ["sqlite_sequence", "_CEDStoNDSMapping", "tmp"] \
+                or r[0].find("List") == len(r[0]) - len("List"):  # find "List" at end of the name
+            # print("------")
             continue
         # omit every reference table
         if r[0].find("Ref") == 0:
-            print("*****")
+            # print("*****")
             continue
-        data = conn.execute(f"SELECT * FROM {r[0]}")
-        mapping_ids[r[0]] = {}
-        tbl_info = conn.execute(f"pragma table_info({r[0]})")
+        print(f"{i_table}, {r[0]}")
+        yield r[0], r[1]
+
+
+def get_mappings_pk(conn: sqlite3.Connection):
+    mapping_ids = {}
+    all_fks = {}
+    for tbl_name, sql_create in table_to_process(conn):
+        mapping_ids[tbl_name] = {}
+        all_fks[tbl_name] = {}
+        if sql_create is not None:
+            fks = get_fks_from_sql(sql_create)
+            for col, ref in fks:
+                all_fks[tbl_name][col] = ref
+        data = conn.execute(f"SELECT * FROM {tbl_name}")
+        tbl_info = conn.execute(f"pragma table_info({tbl_name})")
         tbl_info = [x for x in tbl_info]
         pk_idx, pk_name = get_pk(tbl_info)
+        mapping_ids[tbl_name][pk_name] = {}
         with connection.cursor() as cursor:
-            max_id = cursor.execute(f"SELECT max({pk_name}) FROM {r[0]}").fetchone()
+            max_id = cursor.execute(f"SELECT max({pk_name}) FROM {tbl_name}").fetchone()
         max_id = max_id[0] + 1 if max_id[0] is not None else 0
         for row in data:
-            if r[0] == "Organization" and row[pk_idx] == 1:  # Ministerio de educación
-                mapping_ids[r[0]][row[pk_idx]] = row[pk_idx]
+            if tbl_name == "Organization" and row[pk_idx] == 1:  # Ministerio de educación
+                # mapping_ids[tbl_name][row[pk_idx]] = row[pk_idx]
                 continue
-            mapping_ids[r[0]][row[pk_idx]] = max_id
+            mapping_ids[tbl_name][pk_name][row[pk_idx]] = max_id
             if type(max_id) == int:
                 max_id += 1
             else:
                 raise Exception("not int pk")
-    return mapping_ids
+    return mapping_ids, all_fks
 
 
 def process_file(file):
@@ -87,9 +122,12 @@ def process_file(file):
         raise Exception("No hay base de datos")
     openssl_cmd = f'openssl rsautl -oaep -decrypt -inkey "{os.path.join(settings.BASE_DIR, "claveprivada.pem")}" -in "{encrypt_key}" -out "{os.path.join(folder_name, timestamp_str)}_key.txt"'
     conn = sqlite3.connect(os.path.join(folder_name, db_name))
-    mapping_ids = get_mappings_pk(conn)
+    mapping_ids, all_fks = get_mappings_pk(conn)
     with open(os.path.join(folder_name, "mappings.json"), "w") as mapping_json_file:
         json.dump(mapping_ids, mapping_json_file, indent=4)
+        mapping_json_file.flush()
+    with open(os.path.join(folder_name, "fks.json"), "w") as mapping_json_file:
+        json.dump(all_fks, mapping_json_file, indent=4)
         mapping_json_file.flush()
     print(mapping_ids["Organization"])
 
