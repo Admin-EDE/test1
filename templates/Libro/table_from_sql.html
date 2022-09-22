@@ -1,0 +1,15 @@
+{% extends "Libro/base.html" %}
+
+{% block content %}
+{{ rows|length }}
+<table>
+    {% for row in rows %}
+    <tr>
+        {% for col in row %}
+        <td>{{ col }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

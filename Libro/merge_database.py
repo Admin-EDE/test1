@@ -123,6 +123,29 @@ def process_file(file):
     openssl_cmd = f'openssl rsautl -oaep -decrypt -inkey "{os.path.join(settings.BASE_DIR, "claveprivada.pem")}" -in "{encrypt_key}" -out "{os.path.join(folder_name, timestamp_str)}_key.txt"'
     conn = sqlite3.connect(os.path.join(folder_name, db_name))
     mapping_ids, all_fks = get_mappings_pk(conn)
+    with connection.cursor() as cursor:
+        res = conn.execute("SELECT tbl_name FROM sqlite_schema")
+        for tbl in res:
+            data = conn.execute(f"SELECT * FROM {tbl[0]}")
+            tbl_info = conn.execute(f"pragma table_info({tbl[0]})")
+
+            for drow in data:
+                try:
+                    s = "("
+                    for col in drow:
+                        if col is None:
+                            s += "NULL, "
+                        else:
+                            if type(s) == str:
+                                s += '"'+str(col) + '", '
+                            else:
+                                s += str(col)+", "
+                    s = s[:-2]+")"
+
+                    cursor.execute(f"INSERT INTO {tbl[0]} VALUES {s}")
+                except Exception as e:
+                    print(e)
+                    print(s)
     with open(os.path.join(folder_name, "mappings.json"), "w") as mapping_json_file:
         json.dump(mapping_ids, mapping_json_file, indent=4)
         mapping_json_file.flush()

@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+ceds-nds-v7_1_encryptedD3.db
+
 # C extensions
 *.so
 
