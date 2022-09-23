@@ -52,7 +52,7 @@ def table_to_process(conn: sqlite3.Connection) -> tuple:
 
         # omit some specific non model tables
         # and all the views (ended in "List")
-        if r[0] in ["sqlite_sequence", "_CEDStoNDSMapping", "tmp"] \
+        if r[0] in ["sqlite_sequence", "_CEDStoNDSMapping", "tmp", "_CEDSElements"] \
                 or r[0].find("List") == len(r[0]) - len("List"):  # find "List" at end of the name
             # print("------")
             continue
@@ -124,28 +124,43 @@ def process_file(file):
     conn = sqlite3.connect(os.path.join(folder_name, db_name))
     mapping_ids, all_fks = get_mappings_pk(conn)
     with connection.cursor() as cursor:
-        res = conn.execute("SELECT tbl_name FROM sqlite_schema")
-        for tbl in res:
-            data = conn.execute(f"SELECT * FROM {tbl[0]}")
-            tbl_info = conn.execute(f"pragma table_info({tbl[0]})")
-
+        for tbl, sql in table_to_process(conn):
+            data = conn.execute(f"SELECT * FROM {tbl}")
+            tbl_info = conn.execute(f"pragma table_info({tbl})")
+            colnames = [x[1] for x in tbl_info]
+            sc = "("
+            for c in colnames:
+                sc += str(c)+", "
+            sc = sc[:-2] + ")"
+            # print(sc)
             for drow in data:
                 try:
                     s = "("
+                    icol = 0
                     for col in drow:
+                        col_to_insert = col
+                        if tbl in mapping_ids and colnames[icol] in mapping_ids[tbl] and col in mapping_ids[tbl][colnames[icol]]:
+                            # print("MAPPING ", tbl, colnames[icol], col, mapping_ids[tbl][colnames[icol]][col])
+                            col_to_insert = mapping_ids[tbl][colnames[icol]][col]
+                        if col is not None and tbl in all_fks and colnames[icol] in all_fks[tbl]:
+                            # print("FK ", tbl, colnames[icol], col, all_fks[tbl][colnames[icol]])
+                            col_to_insert = mapping_ids[all_fks[tbl][colnames[icol]][0]][all_fks[tbl][colnames[icol]][1]][col]
                         if col is None:
                             s += "NULL, "
                         else:
                             if type(s) == str:
-                                s += '"'+str(col) + '", '
+                                s += '"'+str(col_to_insert) + '", '
                             else:
-                                s += str(col)+", "
+                                s += str(col_to_insert)+", "
+                        icol += 1
                     s = s[:-2]+")"
-
-                    cursor.execute(f"INSERT INTO {tbl[0]} VALUES {s}")
+                    sql_cmd = f"INSERT INTO {tbl} VALUES {s}"
+                    cursor.execute(sql_cmd)
+                    cursor.commit()
                 except Exception as e:
-                    print(e)
-                    print(s)
+                    #pass
+                    print(tbl, e)
+                    # print(s)
     with open(os.path.join(folder_name, "mappings.json"), "w") as mapping_json_file:
         json.dump(mapping_ids, mapping_json_file, indent=4)
         mapping_json_file.flush()
