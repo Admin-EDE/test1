@@ -3,6 +3,19 @@
 {% block content %}
 {{ rows|length }}
 <table>
+    {%if table_head %}
+    {% if table_head|length > 0 %}
+    <thead>
+    <th>
+        {% for col in table_head %}
+        <td>{{ col }}</td>
+        {% endfor %}
+    </th>
+    </thead>
+    {% endif %}
+    {% endif %}
+    {% if rows %}
+    <tbody>
     {% for row in rows %}
     <tr>
         {% for col in row %}
@@ -10,6 +23,8 @@
         {% endfor %}
     </tr>
     {% endfor %}
+    </tbody>
+    {% endif %}
 </table>
 
 {% endblock %}

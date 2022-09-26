@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="/vendor/bootstrap-5.2.0-dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <script src="/vendor/bootstrap-5.2.0-dist/js/boostrap.bundle.min.js"></script>
+    {% load static %}
+    <link href="{% static 'vendor/bootstrap-5.2.0-dist/css/bootstrap.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'vendor/bootstrap-5.2.0-dist/js/bootstrap.bundle.min.js' %}"></script>
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body>
