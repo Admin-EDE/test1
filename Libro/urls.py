@@ -20,5 +20,5 @@ from . import views
 
 urlpatterns = [
     path('upload_database/', views.upload_database, name='Libro_upload_database'),
-    path('persons/', views.show_students, name="Libro_show_students")
+    path('registro_matricula/', views.registro_matricula_view, name="Libro_registro_matricula")
 ]
