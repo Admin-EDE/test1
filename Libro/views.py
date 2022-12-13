@@ -91,7 +91,7 @@ def registro_matricula_view(request):
         "etnia": registro_matricula.etnia
     }
     print("hola")
-    f = funcs[request.GET.get("item", "RUN")]
+    f = funcs[request.GET.get("item", "run")]
     print(f)
     objs, head = f.__call__()  # registro_matricula.numero_correlativo_de_matricula()
     return render(request, "Libro/table_from_sql.html", {"rows": objs, "table_head": head})
